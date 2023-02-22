@@ -6,11 +6,14 @@ namespace ReverseMarkdown
 {
     public static class Cleaner
     {
-        private static string CleanTagBorders(string content)
+        private static string CleanTagBorders(string content, bool removeComments)
         {
-            // content from some htl editors such as CKEditor emits newline and tab between tags, clean that up
-            content = content.Replace("\n\t", "");
-            content = content.Replace(Environment.NewLine + "\t", "");
+            // content from some html editors such as CKEditor emits newline and tab between tags, clean that up
+            if (removeComments)
+            {
+                content = content.Replace("\n\t", "");
+                content = content.Replace(Environment.NewLine + "\t", "");
+            }
             return content;
         }
 
@@ -24,7 +27,7 @@ namespace ReverseMarkdown
         public static string PreTidy(string content, bool removeComments)
         {
             content = NormalizeSpaceChars(content);
-            content = CleanTagBorders(content);
+            content = CleanTagBorders(content, removeComments);
 
             return content;
         }
