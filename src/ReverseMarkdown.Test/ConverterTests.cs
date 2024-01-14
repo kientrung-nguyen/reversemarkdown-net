@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using VerifyTests;
 using VerifyXunit;
@@ -12,10 +11,13 @@ namespace ReverseMarkdown.Test
     public class ConverterTests
     {
         private readonly ITestOutputHelper _testOutputHelper;
+        private readonly VerifySettings _verifySettings;
 
         public ConverterTests(ITestOutputHelper testOutputHelper)
         {
             _testOutputHelper = testOutputHelper;
+            _verifySettings = new VerifySettings();
+            _verifySettings.DisableRequireUniquePrefix();
         }
 
         [Fact]
@@ -689,7 +691,7 @@ namespace ReverseMarkdown.Test
                 UnknownTags = Config.UnknownTagsOption.Raise
             };
             var converter = new Converter(config);
-            return Verifier.Throws(() => converter.Convert(html))
+            return Verifier.Throws(() => converter.Convert(html), settings: _verifySettings)
                 .IgnoreMember<Exception>(e => e.StackTrace);
         }
 
@@ -916,14 +918,14 @@ namespace ReverseMarkdown.Test
             Assert.Contains("and **Weblog Publisher** for Windows", expected);
         }
 
-        static Task CheckConversion(string html, Config config = null, [CallerFilePath] string sourceFile = "")
+        static Task CheckConversion(string html, Config config = null)
         {
             config = config ?? new Config();
             var converter = new Converter(config);
             var result = converter.Convert(html);
-            var verifySettings = new VerifySettings();
-            verifySettings.UseExtension("md");
-            return Verifier.Verify(result, settings: verifySettings);
+            var settings = new VerifySettings();
+            settings.DisableRequireUniquePrefix();
+            return Verifier.Verify(result, settings: settings, extension: "md");
         }
 
         [Fact]
@@ -1309,6 +1311,34 @@ namespace ReverseMarkdown.Test
         {
             var html =
                 $"<table><tr><th style=\"text-align:left\">Col1</th><th style=\"text-align:center\">Col2</th><th style=\"text-align:right\">Col2</th></tr><tr><td>1</td><td>2</td><td>3</td></tr></table>";
+            return CheckConversion(html);
+        }
+
+        [Fact]
+        public Task When_Sup_And_Nested_Sup()
+        {
+            var html = $"This is the 1<sup>st</sup> sentence to t<sup>e<sup>s</sup></sup>t the sup tag conversion";
+            return CheckConversion(html);
+        }
+
+        [Fact]
+        public Task When_Anchor_Text_with_Underscore_Do_Not_Escape()
+        {
+            var html = $"This a sample <strong>paragraph</strong> from <a href=\"https://www.w3schools.com/html/mov_bbb.mp4\">https://www.w3schools.com/html/mov_bbb.mp4</a>";
+            return CheckConversion(html);
+        }
+
+        [Fact]
+        public Task When_Strikethrough_And_Nested_Strikethrough()
+        {
+            var html = $"This is the 1<s>st</s> sentence to t<del>e<strike>s</strike></strike>t the strikethrough tag conversion";
+            return CheckConversion(html);
+        }
+        
+        [Fact]
+        public Task When_Spaces_In_Inline_Tags_Should_Be_Retained()
+        {
+            var html = $"... example html <i>code </i>block";
             return CheckConversion(html);
         }
     }
