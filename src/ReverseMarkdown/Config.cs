@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Linq;
+using System;
+using System.Linq;
 
 namespace ReverseMarkdown
 {
@@ -8,6 +10,8 @@ namespace ReverseMarkdown
         public UnknownTagsOption UnknownTags { get; set; } = UnknownTagsOption.PassThrough;
 
         public bool GithubFlavored { get; set; } = false;
+        
+        public bool SuppressDivNewlines { get; set; } = false;
 
         public bool RemoveComments { get; set; } = false;
 
