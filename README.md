@@ -27,7 +27,7 @@ string html = "This a sample <strong>paragraph</strong> from <a href=\"http://te
 
 string result = converter.Convert(html);
 ```
-<sup><a href='/src/ReverseMarkdown.Test/Snippets.cs#L12-L20' title='Snippet source file'>snippet source</a> | <a href='#snippet-usage' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/ReverseMarkdown.Test/Snippets.cs#L11-L19' title='Snippet source file'>snippet source</a> | <a href='#snippet-usage' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 Will result in:
@@ -59,7 +59,7 @@ var config = new ReverseMarkdown.Config
 
 var converter = new ReverseMarkdown.Converter(config);
 ```
-<sup><a href='/src/ReverseMarkdown.Test/Snippets.cs#L28-L44' title='Snippet source file'>snippet source</a> | <a href='#snippet-usagewithconfig' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/ReverseMarkdown.Test/Snippets.cs#L27-L43' title='Snippet source file'>snippet source</a> | <a href='#snippet-usagewithconfig' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 ## Configuration options
